@@ -144,7 +144,7 @@ router.get("/getAllUser", async (req, res) => {
         { mobile: { $regex: `^${searchItem}` } },
       ],
     };
-    let users = await Users.find(search).skip(skip).limit(limit);
+    let users = await Users.find(search).skip(skip).limit(5);
 
     if (!users) {
       res.status(404).json({ message: "Users not found" });
