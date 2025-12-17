@@ -44,7 +44,7 @@ let TableComp = () => {
   useEffect(() => {
     let getAllData = async () => {
       let userData = await axios.get(
-        `http://localhost:3000/api/getAllUser?search=${searchele}&page=1&limit=3`
+        `http://localhost:3000/api/getAllUser?search=${searchele}&page=1&limit=5`
       );
       console.log(userData);
       setShow(userData.data.data);
