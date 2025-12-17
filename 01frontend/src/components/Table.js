@@ -7,18 +7,21 @@ import { useEffect } from "react";
 import axios from "axios";
 let TableComp = () => {
   let [msg, setMsg] = useState({ message: "" });
+  let [searchele, setSearch] = useState("");
   let [data, setData] = useState([]);
   let [user, setUser] = useState([]);
+  let [show, setShow] = useState([]);
   let fetchData = async () => {
     let userData = await fetch("http://localhost:3000/api/allUsers");
     let json = await userData.json();
-    setData(json.data);
+    setData(show.length === 0 ? json.data : show);
     setMsg(json.msessage);
+    console.log(json);
   };
 
   useEffect(() => {
     fetchData();
-  }, [data, user]);
+  }, []);
 
   let getData = async (id) => {
     console.log(id);
@@ -36,10 +39,37 @@ let TableComp = () => {
 
   useEffect(() => {
     fetchData();
-  }, [msg]);
+  }, [msg, show]);
 
+  useEffect(() => {
+    let getAllData = async () => {
+      let userData = await axios.get(
+        `http://localhost:3000/api/getAllUser?search=${searchele}&page=1&limit=3`
+      );
+      console.log(userData);
+      setShow(userData.data.data);
+    };
+    getAllData();
+  }, [searchele]);
+
+  useEffect(() => {
+    console.log(show);
+  }, [show]);
   return (
     <>
+      <div class="input-group mb-3 w-50 m-auto rounded-2">
+        <div class="input-group-prepend"></div>
+        <input
+          type="text"
+          class="form-control mt-5 rounded-2"
+          placeholder="Search by using name"
+          aria-label="Username"
+          aria-describedby="basic-addon1"
+          onChange={(e) => {
+            setSearch(e.target.value);
+          }}
+        />
+      </div>
       <Table striped bordered hover className="mt-3">
         <thead>
           <tr>
@@ -152,6 +182,23 @@ let TableComp = () => {
           })}
         </tbody>
       </Table>
+      <div className=" w-50 m-auto d-flex justify-content-around">
+        <nav aria-label="...">
+          <ul class="pagination">
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1">
+                Previous
+              </a>
+            </li>
+
+            <li class="page-item">
+              <a class="page-link" href="#">
+                Next
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </>
   );
 };
